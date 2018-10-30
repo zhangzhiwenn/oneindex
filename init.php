@@ -30,14 +30,14 @@ if (!function_exists('config')) {
 		$file = empty($file) ? 'base' : $file;
 
 		$file_name = CONFIG_PATH . $file . '.php';
-		//读取配置
+		//讀取配置
 		if (empty($configs[$file]) AND file_exists($file_name)) {
 			$configs[$file] = @include $file_name;
 		}
 
 		if (func_num_args() === 2) {
 			$value = func_get_arg(1);
-			//写入配置
+			//寫入配置
 			if (!empty($key)) {
 				$configs[$file] = (array) $configs[$file];
 				if (is_null($value)) {
@@ -56,7 +56,7 @@ if (!function_exists('config')) {
 			}
 			file_put_contents($file_name, "<?php return " . var_export($configs[$file], true) . ";", FILE_FLAGS);
 		} else {
-			//返回结果
+			//返回結果
 			if (!empty($key)) {
 				return $configs[$file][$key];
 			}

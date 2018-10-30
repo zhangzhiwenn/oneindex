@@ -2,20 +2,20 @@
 
 require  __DIR__.'/init.php';
 
-//世纪互联
+//巴拉巴拉小魔仙世界
 //onedrive::$api_url = "https://microsoftgraph.chinacloudapi.cn/v1.0";
 //onedrive::$oauth_url = "https://login.partner.microsoftonline.cn/common/oauth2/v2.0";
 
 
 /**
- *    程序安装
+ *    程式安裝
  */
 if( empty( config('refresh_token') ) ){
 	route::any('/','AdminController@install');
 }
 
 /**
- *    系统后台
+ *    系統後台
  */
 route::group(function(){
 	return ($_COOKIE['admin'] == md5(config('password').config('refresh_token')) );
@@ -28,15 +28,15 @@ route::group(function(){
 	route::any('/admin/images','AdminController@images');
 
 	route::any('/admin/upload','UploadController@index');
-	//守护进程
+	//守護進程
 	route::any('/admin/upload/run','UploadController@run');
-	//上传进程
+	//上傳進程
 	route::post('/admin/upload/task','UploadController@task');
 });
-//登陆
+//登入
 route::any('/login','AdminController@login');
 
-//跳转到登陆
+//跳轉到登入
 route::any('/admin/',function(){
 	return view::direct(get_absolute_path(dirname($_SERVER['SCRIPT_NAME'])).'?/login');
 });
@@ -57,6 +57,7 @@ if( ($_COOKIE['admin'] == md5(config('password').config('refresh_token')) || $im
 
 
 /**
- *    列目录
+ *    列目錄
  */
 route::any('{path:#all}','IndexController@index');
+

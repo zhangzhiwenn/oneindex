@@ -27,7 +27,7 @@ class one{
 		if(!file_exists($localfile)){
 			exit('file not exists');
 		}
-		print ' 本地文件：'.$localfile.PHP_EOL;
+		print ' 本地資料：'.$localfile.PHP_EOL;
 
 		if(empty($remotefile)){
 			$remotepath = pathinfo($localfile, PATHINFO_BASENAME);
@@ -37,21 +37,21 @@ class one{
 		}else{
 			$remotepath = ltrim($remotefile, '/');
 		}
-		print ' 远程文件：'.$remotepath.PHP_EOL;
+		print ' 遠程資料：'.$remotepath.PHP_EOL;
 		
-		$filesize = onedrive::_filesize($localfile) OR die('无法获取文件大小');
+		$filesize = onedrive::_filesize($localfile) OR die('無法獲取資料大小');
 		if($filesize < 10485760){
-			print ' 上传方式：直接上传'.PHP_EOL;
+			print ' 上傳方式：直接上傳'.PHP_EOL;
 			$begin_time = microtime(true);
 			$result = onedrive::upload($remotepath, file_get_contents($localfile));
 			if(!empty($result)){
 				$upload_time = microtime(true) - $begin_time;
-				print ' 上传成功:'.onedrive::human_filesize($filesize/$upload_time).'/s'.PHP_EOL;
+				print ' 上傳成功:'.onedrive::human_filesize($filesize/$upload_time).'/s'.PHP_EOL;
 			}else{
-				print ' 上传失败!'.PHP_EOL;
+				print ' 上傳失敗!'.PHP_EOL;
 			}
 		}else{
-			print ' 上传方式：分块上传'.PHP_EOL;
+			print ' 上傳方式：分塊上傳'.PHP_EOL;
 			return self::upload_large_file($localfile, $remotepath);
 		}
 		return;
@@ -60,7 +60,7 @@ class one{
 	static function upload_folder($localfolder, $remotefolder='/'){
 		$localfolder = realpath($localfolder);
 		$remotefolder = get_absolute_path($remotefolder);
-		print ' 开始上传文件夹'.PHP_EOL;
+		print ' 開始上傳資料夾'.PHP_EOL;
 		self::folder2upload($localfolder,$remotefolder);
 	}
 
@@ -112,7 +112,7 @@ class one{
 		$upload = config('@upload');
 		$info = $upload[$remotepath];
 		if(empty($info['url'])){
-			print ' 创建上传会话'.PHP_EOL;
+			print ' 新建上傳會話'.PHP_EOL;
 			$data = onedrive::create_upload_session($remotepath);
 			if(!empty($data['uploadUrl'])){
 				$info['url'] = $data['uploadUrl'];
@@ -125,18 +125,18 @@ class one{
 				$upload[$remotepath] = $info;
 				config('@upload', $upload);
 			}elseif ( $data === false ){
-				print ' 文件已存在!'.PHP_EOL;
+				print ' 資料已存在!'.PHP_EOL;
 				return;
 			}
 		}
 		
 		if(empty($info['url'])){
-			print ' 获取会话失败！'.PHP_EOL;
+			print ' 獲取會話失敗！'.PHP_EOL;
 			sleep(3);
 			return self::upload_large_file($localfile, $remotepath);
 		}
 		
-		print ' 上传分块'.onedrive::human_filesize($info['length']).'	';
+		print ' 上傳分塊'.onedrive::human_filesize($info['length']).'	';
 		$begin_time = microtime(true);
 		$data = onedrive::upload_session($info['url'], $info['localfile'], $info['offset'], $info['length']);
 
@@ -156,10 +156,10 @@ class one{
 		}elseif(!empty($data['@content.downloadUrl']) || !empty($data['id'])){
 			unset($upload[$remotepath]);
 			config('@upload', $upload);
-			print ' 上传完成！'.PHP_EOL;
+			print ' 上傳完成！'.PHP_EOL;
 			return;
 		}else{
-			print ' 失败!'.PHP_EOL;
+			print ' 失敗!'.PHP_EOL;
 			$data = onedrive::upload_session_status($info['url']);
 			if(empty($data)|| $info['length']<100){
 				onedrive::delete_upload_session($info['url']);
